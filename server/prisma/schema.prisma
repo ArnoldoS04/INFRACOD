@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model roles {
+  idroles     Int        @id
+  rol         String?    @db.VarChar(45)
+  descripcion String?    @db.VarChar(100)
+  status      String?    @default("A") @db.Char(1)
+  usuarios    usuarios[]
+}
+
+model usuarios {
+  idusuarios Int       @id @default(autoincrement())
+  rol        Int
+  username   String?   @db.VarChar(45)
+  password   String?   @db.LongText
+  createdate DateTime? @default(now()) @db.DateTime(0)
+  status     String?   @default("A") @db.Char(1)
+  roles      roles     @relation(fields: [rol], references: [idroles], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
+
+  @@index([rol], map: "fk_rol_idx")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model cotizacion {
+  idcotizacion         Int                  @id @default(autoincrement())
+  coti_idempleado_crea Int?
+  coti_idcliente       Int?
+  coti_correlativo     String?              @unique(map: "coti_correlativo_UNIQUE") @db.VarChar(25)
+  coti_nombre          String?              @db.VarChar(100)
+  coti_nit             String?              @db.VarChar(45)
+  coti_empresa         String?              @db.Text
+  coti_direccion       String?              @db.Text
+  coti_reg             String?              @db.VarChar(45)
+  coti_nog             Int?                 @unique(map: "coti_nog_UNIQUE") @db.UnsignedInt
+  coti_tel             String?              @db.VarChar(45)
+  coti_correo          String?              @db.VarChar(45)
+  coti_fecha_crea      DateTime?            @default(now()) @db.DateTime(0)
+  coti_fecha_valida    DateTime?            @db.Date
+  coti_total           Decimal?             @db.Decimal(10, 2)
+  coti_total_rent      Decimal?             @db.Decimal(10, 2)
+  coti_xtaje_rent      String?              @db.VarChar(4)
+  coti_estado          Int?                 @default(1) @db.TinyInt
+  coti_imag            Int?                 @db.TinyInt
+  coti_terminos        String?              @db.Text
+  detalle_cotizacion   detalle_cotizacion[]
+}
+
+model detalle_cotizacion {
+  iddetalle_cotizacion Int         @id @default(autoincrement())
+  det_idcotizacion     Int?
+  det_descripcion      String?     @db.Text
+  det_cantidad         Int?
+  det_img              String?     @db.Text
+  det_precio_unitario  String      @db.VarChar(45)
+  det_precio_rent      Decimal     @db.Decimal(10, 2)
+  det_a_ganar          Decimal?    @db.Decimal(10, 2)
+  det_isr              Decimal?    @db.Decimal(10, 2)
+  det_iva              Decimal?    @db.Decimal(10, 2)
+  det_otros_gastos     Decimal?    @db.Decimal(10, 2)
+  cotizacion           cotizacion? @relation(fields: [det_idcotizacion], references: [idcotizacion], onDelete: Cascade, map: "fk_det_coti")
+
+  @@index([det_idcotizacion], map: "fk_det_coti_idx")
+}
