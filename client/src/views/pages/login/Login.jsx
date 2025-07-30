@@ -39,12 +39,14 @@ const Login = () => {
       );
 
       localStorage.setItem("token", res.data.accessToken);
-      console.log("Login exitoso:", res.data);
+      console.log("Login exitoso:", res.data, res.data.message);
 
       navigate("/dashboard"); // Redirige a una página después del login
     } catch (err) {
       console.error("Error en login", err);
-      setError("*Usuario o contraseña incorrectos.*");
+      const mensajeError =
+        err.response?.data?.mensaje || "Error al iniciar sesión";
+      setError(mensajeError);
     }
   };
 

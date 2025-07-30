@@ -19,7 +19,6 @@ export const passHash = async (req, res) => {
 export const creaToken = async (req, res) => {
   try {
     const { username, password } = req.body;
-
     // Valida que los campos no estén vacíos
     if (!username || !password) {
       return res
@@ -32,19 +31,23 @@ export const creaToken = async (req, res) => {
         username,
       },
     });
-
     if (!user) {
-      return res.status(401).json({ mensaje: "Usuario no encontrado" });
+      return res
+        .status(401)
+        .json({ mensaje: "Usuario o contraseña incorrectos" });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res
+        .status(401)
+        .json({ mensaje: "Usuario o contraseña incorrectos" });
     }
     // Valida estado de usuario
     if (user.status !== "A") {
       return res.status(401).json({
         mensaje: "El usuario se encuentra bloqueado, comuníquese con soporte",
       });
-    }
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(401).json({ mensaje: "Contraseña incorrecta" });
     }
     // Genera el token JWT
     const payload = {
