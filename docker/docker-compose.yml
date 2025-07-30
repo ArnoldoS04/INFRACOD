@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ../server
+    container_name: infracod-backend
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+
+    networks:
+      - infracod-net
+
+  frontend:
+    build:
+      context: ../client
+    container_name: infracod-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - infracod-net
+
+networks:
+  infracod-net:
+    driver: bridge
