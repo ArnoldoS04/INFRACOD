@@ -16,14 +16,17 @@ services:
     networks:
       - infracod-net
 
-frontend:
-  build:
-    context: ../client
-  container_name: infracod-frontend
-  ports:
-    - "443:443"  # 443 en el contenedor, 5173 en tu máquina
-  depends_on:
-    - backend
-  networks:
-    - infracod-net
+  frontend:
+    build:
+      context: ../client
+    container_name: infracod-frontend
+    ports:
+      - "443:443"  # 443 en el contenedor, 5173 en tu máquina
+    depends_on:
+      - backend
+    networks:
+      - infracod-net
 
+networks:
+  infracod-net:
+    driver: bridge
