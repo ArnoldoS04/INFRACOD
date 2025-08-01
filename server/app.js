@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://infracod.local:5173", // Aquí debe ser HTTPS si frontend usa HTTPS
+    origin: "https://infracod.local", // Aquí debe ser HTTPS si frontend usa HTTPS
     credentials: true,
   })
 );
