@@ -1,4 +1,6 @@
 import React from "react";
+import * as NumeroALetras from "numero-a-letras";
+
 const MAX_HEIGHT = 600;
 
 const CotizacionPDFTemplate = React.forwardRef(
@@ -69,6 +71,12 @@ const CotizacionPDFTemplate = React.forwardRef(
 
     // const getIVA = () => getSubtotal() * 0.12;
     const getTotal = () => getSubtotal();
+    let resultado = NumeroALetras.NumerosALetras(getTotal().toFixed(2));
+    // Reemplaza "Pesos" por "quetzales" (ignorando mayúsculas/minúsculas)
+    resultado = resultado
+      .replace(/pesos/i, "Quetzales con")
+      .replace(/M\.N\./i, "Centavos")
+      .trim();
 
     return (
       <div ref={ref}>
@@ -232,38 +240,45 @@ const CotizacionPDFTemplate = React.forwardRef(
             </table>
 
             {/* Totales solo en la última página */}
+            {}
             {index === pages.length - 1 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "20px",
-                  fontSize: "16px",
-                }}
-              >
-                {/* Términos y condiciones - lado derecho */}
-                <div style={{ textAlign: "left", width: "48%" }}>
-                  <p style={{ whiteSpace: "pre-wrap", fontSize: "12px" }}>
-                    <strong>Términos y condiciones:</strong>
-                    <br />
-                    {cotizacion?.coti_terminos ||
-                      "No se especificaron términos."}
-                  </p>
-                </div>
-                {/* Totales - lado izquierdo */}
-                <div style={{ textAlign: "right", width: "48%" }}>
-                  {/* <p>
+              <>
+                <p style={{ whiteSpace: "pre-wrap", fontSize: "12px" }}>
+                  {resultado}
+                </p>
+                <hr className="my-2" />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "20px",
+                    fontSize: "16px",
+                  }}
+                >
+                  {/* Términos y condiciones - lado derecho */}
+                  <div style={{ textAlign: "left", width: "48%" }}>
+                    <p style={{ whiteSpace: "pre-wrap", fontSize: "12px" }}>
+                      <strong>Términos y condiciones:</strong>
+                      <br />
+                      {cotizacion?.coti_terminos ||
+                        "No se especificaron términos."}
+                    </p>
+                  </div>
+                  {/* Totales - lado izquierdo */}
+                  <div style={{ textAlign: "right", width: "48%" }}>
+                    {/* <p>
                     <strong>Subtotal:</strong> Q {getSubtotal().toFixed(2)}
                   </p>
                   <p>
                     <strong>IVA (12%):</strong> Q {getIVA().toFixed(2)}
                   </p> */}
-                  <p style={{ color: "#003d7c" }}>
-                    <strong>Total con impuestos:</strong> Q{" "}
-                    {getTotal().toFixed(2)}
-                  </p>
+                    <p style={{ color: "#003d7c" }}>
+                      <strong>Total con impuestos:</strong> Q{" "}
+                      {getTotal().toFixed(2)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         ))}
