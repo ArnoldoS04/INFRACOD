@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     build:
@@ -7,13 +5,14 @@ services:
     container_name: infracod-backend
     ports:
       - "3000:3000"
+    volumes:
+      - ../server/certs:/app/certs:ro
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
-
     networks:
       - infracod-net
 
@@ -22,12 +21,10 @@ services:
       context: ../client
     container_name: infracod-frontend
     ports:
-      - "5173:80"
+      - "5173:5173"
+    volumes:
+      - ../server/certs:/app/certs:ro
     depends_on:
       - backend
     networks:
       - infracod-net
-
-networks:
-  infracod-net:
-    driver: bridge
