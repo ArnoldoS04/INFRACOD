@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `egreso` MODIFY `egs_fecha_crea` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0);
-
--- AlterTable
-ALTER TABLE `ingreso` MODIFY `ing_fecha_crea` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0);

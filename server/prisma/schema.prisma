@@ -26,10 +26,10 @@ model empleado {
   emp_celular          BigInt?
   emp_salario          Float?
   emp_estado           String?   @db.Char(1)
+  puestoId             Int
+  puesto               puesto    @relation(fields: [puestoId], references: [idpuesto])
 
-  // Foreign key a puesto
-  puestoId Int
-  puesto   puesto @relation(fields: [puestoId], references: [idpuesto])
+  @@index([puestoId], map: "empleado_puestoId_fkey")
 }
 
 model roles {
@@ -41,17 +41,15 @@ model roles {
 }
 
 model puesto {
-  idpuesto   Int      @id @default(autoincrement())
-  pue_nombre String   @db.VarChar(100)
-  pue_estado Boolean  @default(true)
-  pue_fecha  DateTime @default(now())
+  idpuesto   Int        @id @default(autoincrement())
+  pue_nombre String     @db.VarChar(100)
+  pue_estado Boolean    @default(true)
+  pue_fecha  DateTime   @default(now())
+  areaId     Int
+  empleados  empleado[]
+  area       area       @relation(fields: [areaId], references: [idarea])
 
-  // Foreign Key a area
-  areaId Int
-  area   area @relation(fields: [areaId], references: [idarea])
-
-  // Relaciones
-  empleados empleado[]
+  @@index([areaId], map: "puesto_areaId_fkey")
 }
 
 model area {
@@ -59,9 +57,7 @@ model area {
   are_nombre String   @db.VarChar(100)
   are_estado Boolean  @default(true)
   are_fecha  DateTime @default(now())
-
-  // Relaciones
-  puestos puesto[]
+  puestos    puesto[]
 }
 
 model usuarios {
@@ -71,37 +67,37 @@ model usuarios {
   password   String?   @db.LongText
   createdate DateTime? @default(now()) @db.DateTime(0)
   status     String?   @default("A") @db.Char(1)
-
-  roles roles @relation(fields: [rol], references: [idroles], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
+  roles      roles     @relation(fields: [rol], references: [idroles], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
 
   @@index([rol], map: "fk_rol_idx")
 }
 
 model cotizacion {
-  idcotizacion         Int       @id @default(autoincrement())
+  idcotizacion         Int                  @id @default(autoincrement())
   coti_idempleado_crea Int?
   coti_idcliente       Int?
-  coti_correlativo     String?   @unique(map: "coti_correlativo_UNIQUE") @db.VarChar(25)
-  coti_nombre          String?   @db.VarChar(100)
-  coti_nit             String?   @db.VarChar(45)
-  coti_empresa         String?   @db.Text
-  coti_direccion       String?   @db.Text
-  coti_reg             String?   @db.VarChar(45)
-  coti_nog             Int?      @unique(map: "coti_nog_UNIQUE") @db.UnsignedInt
-  coti_tel             String?   @db.VarChar(45)
-  coti_correo          String?   @db.VarChar(45)
-  coti_fecha_crea      DateTime? @default(now()) @db.DateTime(0)
-  coti_fecha_valida    DateTime? @db.Date
-  coti_total           Decimal?  @db.Decimal(10, 2)
-  coti_total_rent      Decimal?  @db.Decimal(10, 2)
-  coti_xtaje_rent      String?   @db.VarChar(4)
-  coti_estado          Int?      @default(1)
-  coti_imag            Int?      @db.TinyInt
-  coti_terminos        String?   @db.Text
+  coti_correlativo     String?              @unique(map: "coti_correlativo_UNIQUE") @db.VarChar(25)
+  coti_nombre          String?              @db.VarChar(100)
+  coti_nit             String?              @db.VarChar(45)
+  coti_empresa         String?              @db.Text
+  coti_direccion       String?              @db.Text
+  coti_reg             String?              @db.VarChar(45)
+  coti_nog             Int?                 @unique(map: "coti_nog_UNIQUE") @db.UnsignedInt
+  coti_tel             String?              @db.VarChar(45)
+  coti_correo          String?              @db.VarChar(45)
+  coti_fecha_crea      DateTime?            @default(now()) @db.DateTime(0)
+  coti_fecha_valida    DateTime?            @db.Date
+  coti_total           Decimal?             @db.Decimal(10, 2)
+  coti_total_rent      Decimal?             @db.Decimal(10, 2)
+  coti_xtaje_rent      String?              @db.VarChar(4)
+  coti_estado          Int?                 @default(1)
+  coti_imag            Int?                 @db.TinyInt
+  coti_terminos        String?              @db.Text
+  estado_catalogo      catalogo?            @relation("EstadoCotizacion", fields: [coti_estado], references: [idcatalogo])
+  detalle_cotizacion   detalle_cotizacion[]
+  ingresos             ingreso[]
 
-  estado_catalogo    catalogo?            @relation("EstadoCotizacion", fields: [coti_estado], references: [idcatalogo])
-  detalle_cotizacion detalle_cotizacion[]
-  ingresos           ingreso[]
+  @@index([coti_estado], map: "cotizacion_coti_estado_fkey")
 }
 
 model detalle_cotizacion {
@@ -122,27 +118,25 @@ model detalle_cotizacion {
 }
 
 model catalogo {
-  idcatalogo     Int      @id @default(autoincrement())
+  idcatalogo     Int          @id @default(autoincrement())
   cat_categoria  Int
-  cat_nombre     String   @db.VarChar(45)
-  cat_estado     Int      @db.TinyInt
-  cat_fecha_crea DateTime @default(now())
-
-  cotizaciones cotizacion[] @relation("EstadoCotizacion")
+  cat_nombre     String       @db.VarChar(45)
+  cat_estado     Int          @db.TinyInt
+  cat_fecha_crea DateTime     @default(now())
+  cotizaciones   cotizacion[] @relation("EstadoCotizacion")
 }
 
 model ingreso {
-  idingreso           Int       @id @default(autoincrement())
+  idingreso           Int         @id @default(autoincrement())
   ing_categoria       Int?
   ing_cot_correlativo Int?
   ing_metodo_pago     Int?
-  ing_nreferencia     String?   @db.VarChar(45)
-  ing_descripcion     String?   @db.Text
-  ing_fecha_fact      DateTime? @db.Date
-  ing_fecha_crea      DateTime? @default(now()) @db.DateTime(0) // ← Aquí se asigna automáticamente
-  ing_monto           Decimal?  @db.Decimal(10, 2)
-
-  cotizacion cotizacion? @relation(fields: [ing_cot_correlativo], references: [idcotizacion], onDelete: Cascade, map: "fk_cot_ing")
+  ing_nreferencia     String?     @db.VarChar(45)
+  ing_descripcion     String?     @db.Text
+  ing_fecha_fact      DateTime?   @db.Date
+  ing_fecha_crea      DateTime?   @default(now()) @db.DateTime(0)
+  ing_monto           Decimal?    @db.Decimal(10, 2)
+  cotizacion          cotizacion? @relation(fields: [ing_cot_correlativo], references: [idcotizacion], onDelete: Cascade, map: "fk_cot_ing")
 
   @@index([ing_cot_correlativo], map: "fk_cot_ing_idx")
 }
@@ -155,6 +149,6 @@ model egreso {
   egs_nreferencia String?   @db.VarChar(45)
   egs_descripcion String?   @db.Text
   egs_fecha_fact  DateTime? @db.Date
-  egs_fecha_crea  DateTime? @default(now()) @db.DateTime(0) // ← También se genera sola
+  egs_fecha_crea  DateTime? @default(now()) @db.DateTime(0)
   egs_monto       Decimal?  @db.Decimal(10, 2)
 }
