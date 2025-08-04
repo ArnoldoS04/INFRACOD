@@ -38,6 +38,34 @@ const _nav = [
     to: "/newquote",
     icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: "Editar cotización",
+    to: "/editquote",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Reporte cotizaciones",
+    to: "/quotereport",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: "Finanzas",
+  },
+  {
+    component: CNavItem,
+    name: "Registrar Ingreso",
+    to: "/income",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Registrar Egreso",
+    to: "/expenses",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
   //   {
   //     component: CNavItem,
   //     name: "Typography",

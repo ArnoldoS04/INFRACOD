@@ -7,12 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model empleado {
+  idempleado           Int       @id @default(autoincrement())
+  emp_codigo           String    @unique @db.VarChar(15)
+  emp_nombre           String?   @db.VarChar(45)
+  emp_nombre2          String?   @db.VarChar(45)
+  emp_nombre3          String?   @db.VarChar(45)
+  emp_apellido         String?   @db.VarChar(45)
+  emp_apellido2        String?   @db.VarChar(45)
+  emp_apellido_casada  String?   @db.VarChar(45)
+  emp_dpi              String?   @unique @db.VarChar(45)
+  emp_fecha_nacimiento DateTime?
+  emp_genero           String?   @db.VarChar(45)
+  emp_fecha_ingreso    DateTime?
+  emp_fecha_egreso     DateTime?
+  emp_correo           String?   @db.LongText
+  emp_direccion        String?   @db.LongText
+  emp_celular          BigInt?
+  emp_salario          Float?
+  emp_estado           String?   @db.Char(1)
+
+  // Foreign key a puesto
+  puestoId Int
+  puesto   puesto @relation(fields: [puestoId], references: [idpuesto])
+}
+
 model roles {
   idroles     Int        @id
   rol         String?    @db.VarChar(45)
   descripcion String?    @db.VarChar(100)
   status      String?    @default("A") @db.Char(1)
   usuarios    usuarios[]
+}
+
+model puesto {
+  idpuesto   Int      @id @default(autoincrement())
+  pue_nombre String   @db.VarChar(100)
+  pue_estado Boolean  @default(true)
+  pue_fecha  DateTime @default(now())
+
+  // Foreign Key a area
+  areaId Int
+  area   area @relation(fields: [areaId], references: [idarea])
+
+  // Relaciones
+  empleados empleado[]
+}
+
+model area {
+  idarea     Int      @id @default(autoincrement())
+  are_nombre String   @db.VarChar(100)
+  are_estado Boolean  @default(true)
+  are_fecha  DateTime @default(now())
+
+  // Relaciones
+  puestos puesto[]
 }
 
 model usuarios {
@@ -22,42 +71,37 @@ model usuarios {
   password   String?   @db.LongText
   createdate DateTime? @default(now()) @db.DateTime(0)
   status     String?   @default("A") @db.Char(1)
-  roles      roles     @relation(fields: [rol], references: [idroles], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
+
+  roles roles @relation(fields: [rol], references: [idroles], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
 
   @@index([rol], map: "fk_rol_idx")
 }
 
-model PasswordResetToken {
-  id        Int      @id @default(autoincrement())
-  email     String
-  token     String   @unique
-  expiresAt DateTime
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-}
-
 model cotizacion {
-  idcotizacion         Int                  @id @default(autoincrement())
+  idcotizacion         Int       @id @default(autoincrement())
   coti_idempleado_crea Int?
   coti_idcliente       Int?
-  coti_correlativo     String?              @unique(map: "coti_correlativo_UNIQUE") @db.VarChar(25)
-  coti_nombre          String?              @db.VarChar(100)
-  coti_nit             String?              @db.VarChar(45)
-  coti_empresa         String?              @db.Text
-  coti_direccion       String?              @db.Text
-  coti_reg             String?              @db.VarChar(45)
-  coti_nog             Int?                 @unique(map: "coti_nog_UNIQUE") @db.UnsignedInt
-  coti_tel             String?              @db.VarChar(45)
-  coti_correo          String?              @db.VarChar(45)
-  coti_fecha_crea      DateTime?            @default(now()) @db.DateTime(0)
-  coti_fecha_valida    DateTime?            @db.Date
-  coti_total           Decimal?             @db.Decimal(10, 2)
-  coti_total_rent      Decimal?             @db.Decimal(10, 2)
-  coti_xtaje_rent      String?              @db.VarChar(4)
-  coti_estado          Int?                 @default(1) @db.TinyInt
-  coti_imag            Int?                 @db.TinyInt
-  coti_terminos        String?              @db.Text
-  detalle_cotizacion   detalle_cotizacion[]
+  coti_correlativo     String?   @unique(map: "coti_correlativo_UNIQUE") @db.VarChar(25)
+  coti_nombre          String?   @db.VarChar(100)
+  coti_nit             String?   @db.VarChar(45)
+  coti_empresa         String?   @db.Text
+  coti_direccion       String?   @db.Text
+  coti_reg             String?   @db.VarChar(45)
+  coti_nog             Int?      @unique(map: "coti_nog_UNIQUE") @db.UnsignedInt
+  coti_tel             String?   @db.VarChar(45)
+  coti_correo          String?   @db.VarChar(45)
+  coti_fecha_crea      DateTime? @default(now()) @db.DateTime(0)
+  coti_fecha_valida    DateTime? @db.Date
+  coti_total           Decimal?  @db.Decimal(10, 2)
+  coti_total_rent      Decimal?  @db.Decimal(10, 2)
+  coti_xtaje_rent      String?   @db.VarChar(4)
+  coti_estado          Int?      @default(1)
+  coti_imag            Int?      @db.TinyInt
+  coti_terminos        String?   @db.Text
+
+  estado_catalogo    catalogo?            @relation("EstadoCotizacion", fields: [coti_estado], references: [idcatalogo])
+  detalle_cotizacion detalle_cotizacion[]
+  ingresos           ingreso[]
 }
 
 model detalle_cotizacion {
@@ -75,4 +119,42 @@ model detalle_cotizacion {
   cotizacion           cotizacion? @relation(fields: [det_idcotizacion], references: [idcotizacion], onDelete: Cascade, map: "fk_det_coti")
 
   @@index([det_idcotizacion], map: "fk_det_coti_idx")
+}
+
+model catalogo {
+  idcatalogo     Int      @id @default(autoincrement())
+  cat_categoria  Int
+  cat_nombre     String   @db.VarChar(45)
+  cat_estado     Int      @db.TinyInt
+  cat_fecha_crea DateTime @default(now())
+
+  cotizaciones cotizacion[] @relation("EstadoCotizacion")
+}
+
+model ingreso {
+  idingreso           Int       @id @default(autoincrement())
+  ing_categoria       Int?
+  ing_cot_correlativo Int?
+  ing_metodo_pago     Int?
+  ing_nreferencia     String?   @db.VarChar(45)
+  ing_descripcion     String?   @db.Text
+  ing_fecha_fact      DateTime? @db.Date
+  ing_fecha_crea      DateTime? @default(now()) @db.DateTime(0) // ← Aquí se asigna automáticamente
+  ing_monto           Decimal?  @db.Decimal(10, 2)
+
+  cotizacion cotizacion? @relation(fields: [ing_cot_correlativo], references: [idcotizacion], onDelete: Cascade, map: "fk_cot_ing")
+
+  @@index([ing_cot_correlativo], map: "fk_cot_ing_idx")
+}
+
+model egreso {
+  idegreso        Int       @id @default(autoincrement())
+  egs_categoria   Int?
+  egs_nocompra    String?   @db.VarChar(45)
+  egs_metodo_pago Int?
+  egs_nreferencia String?   @db.VarChar(45)
+  egs_descripcion String?   @db.Text
+  egs_fecha_fact  DateTime? @db.Date
+  egs_fecha_crea  DateTime? @default(now()) @db.DateTime(0) // ← También se genera sola
+  egs_monto       Decimal?  @db.Decimal(10, 2)
 }
