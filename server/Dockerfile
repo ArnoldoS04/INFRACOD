@@ -19,5 +19,3 @@ RUN npx prisma generate
 # Exponer el puerto (ajusta si usas otro)
 EXPOSE 3000
 
-# Comando de producción (opcionalmente con migraciones)
-CMD ["npm", "start"]
