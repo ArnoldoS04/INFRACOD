@@ -1,5 +1,3 @@
-version: 3.8
-
 services:
   backend:
     build:
@@ -15,7 +13,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
-    command: sh -c "npx prisma migrate deploy
+    command: sh -c "npx prisma migrate deploy"
     networks:
       - infracod-net
 
