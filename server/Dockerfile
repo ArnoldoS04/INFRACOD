@@ -15,7 +15,7 @@ COPY . .
 
 # Generar Prisma Client
 RUN npx prisma generate
-RUN npx prisma migrate deploy
+
 # Exponer el puerto (ajusta si usas otro)
 EXPOSE 3000
 
