@@ -130,7 +130,6 @@ const ValidationExample = () => {
   };
 
   const generatePDF = async () => {
-    console.log(items);
     try {
       const res = await authFetch.post("/sales/cotinsert", {
         coti_nombre: nombreCliente,
@@ -180,7 +179,6 @@ const ValidationExample = () => {
   const handleDeleteItem = (indexToDelete) => {
     const newItems = items.filter((_, index) => index !== indexToDelete);
     setItems(newItems);
-    console.log(newItems);
     // Si ya no hay items, ocultar la tabla
     if (newItems.length === 0) {
       setShowTable(false);

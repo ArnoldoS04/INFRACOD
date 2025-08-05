@@ -25,6 +25,7 @@ import { faPencil, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import CotizacionPDFTemplate from "../../components/CotizacionPDF";
 import authFetch from "../../components/AuthFecth";
 import ToastContainer from "../../components/ToastConainer";
+import html2pdf from "html2pdf.js";
 
 const EditCoti = () => {
   const [validatedG, setValidatedG] = useState(false);
@@ -143,7 +144,15 @@ const EditCoti = () => {
         items,
       });
 
-      console.log(res);
+      const opt = {
+        margin: 0.5,
+        filename: `Cotización-${correlativo}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "pt", format: "letter", orientation: "portrait" },
+      };
+
+      await html2pdf().set(opt).from(pdfRef.current).save();
 
       // ✅ Reiniciar formulario
       resetForm();
@@ -163,7 +172,6 @@ const EditCoti = () => {
   const handleDeleteItem = (indexToDelete) => {
     const newItems = items.filter((_, index) => index !== indexToDelete);
     setItems(newItems);
-    console.log(newItems);
     // Si ya no hay items, ocultar la tabla
     if (newItems.length === 0) {
       setShowTable(false);
@@ -173,7 +181,6 @@ const EditCoti = () => {
   const handleEditItem = (indexToEdit) => {
     const form = formRef.current;
     const itemToEdit = items[indexToEdit];
-    console.log(itemToEdit);
     form.item.value = itemToEdit.descripcion;
     form.cantidad.value = itemToEdit.cantidad;
     form.precioV.value = itemToEdit.precio;
@@ -211,9 +218,6 @@ const EditCoti = () => {
         setItems([]);
         setShowTable(false);
       }
-
-      console.log("detalle", res.data.detalle_cotizacion);
-      console.log("Cotización cargada:", res.data);
     } catch (error) {
       console.log("Error al obtener datos de la cotización:", error);
       resetForm();
