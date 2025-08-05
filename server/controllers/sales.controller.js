@@ -100,15 +100,15 @@ export const saveCoti = async (req, res) => {
       if (items.length > 0) {
         const detalles = items.map((item) => ({
           det_idcotizacion: nuevaCotizacion.idcotizacion,
-          det_descripcion: item.descripcion,
-          det_cantidad: parseInt(item.cantidad, 10),
-          det_img: item.img,
-          det_precio_unitario: item.precio,
-          det_precio_rent: item.precio,
-          det_a_ganar: item.a_ganar,
-          det_isr: item.isr,
-          det_iva: item.iva,
-          det_otros_gastos: item.otros_gastos,
+          det_descripcion: item.det_descripcion,
+          det_cantidad: parseInt(item.det_cantidad, 10),
+          det_img: item.det_img,
+          det_precio_unitario: item.det_precio_unitario,
+          det_precio_rent: item.det_precio_unitario,
+          det_a_ganar: item.det_a_ganar,
+          det_isr: item.det_isr,
+          det_iva: item.det_iva,
+          det_otros_gastos: item.det_otros_gastos,
         }));
 
         await tx.detalle_cotizacion.createMany({

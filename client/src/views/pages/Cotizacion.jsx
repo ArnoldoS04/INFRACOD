@@ -85,13 +85,16 @@ const ValidationExample = () => {
     }
 
     // Obtiene los valores
-    const descripcion = form.item.value;
-    const cantidad = form.cantidad.value;
-    const precio = form.precioV.value;
-    const total = precio * cantidad;
+    const det_descripcion = form.item.value;
+    const det_cantidad = form.cantidad.value;
+    const det_precio_unitario = form.precioV.value;
+    const total = det_precio_unitario * det_cantidad;
 
     // Agrega a la lista
-    setItems([...items, { descripcion, cantidad, precio, total }]);
+    setItems([
+      ...items,
+      { det_descripcion, det_cantidad, det_precio_unitario, total },
+    ]);
 
     setShowTable(true);
 
@@ -127,6 +130,7 @@ const ValidationExample = () => {
   };
 
   const generatePDF = async () => {
+    console.log(items);
     try {
       const res = await authFetch.post("/sales/cotinsert", {
         coti_nombre: nombreCliente,
@@ -398,9 +402,11 @@ const ValidationExample = () => {
                     const realIndex = indexOfFirstItem + index;
                     return (
                       <tr key={realIndex}>
-                        <td>{item.descripcion}</td>
-                        <td>{item.cantidad}</td>
-                        <td>{parseFloat(item.precio).toFixed(2)}</td>
+                        <td>{item.det_descripcion}</td>
+                        <td>{item.det_cantidad}</td>
+                        <td>
+                          {parseFloat(item.det_precio_unitario).toFixed(2)}
+                        </td>
                         <td>{parseFloat(item.total).toFixed(2)}</td>
                         <td>
                           <CButton
