@@ -14,7 +14,7 @@ const CotizacionPDFTemplate = React.forwardRef(
       fakeTable.style.top = "0";
       fakeTable.style.left = "0";
       fakeTable.style.width = "816px";
-      fakeTable.style.fontSize = "14px";
+      fakeTable.style.fontSize = "12px";
       fakeTable.style.borderCollapse = "collapse";
 
       document.body.appendChild(fakeTable);
@@ -28,16 +28,16 @@ const CotizacionPDFTemplate = React.forwardRef(
 
         row.innerHTML = `
       <td style="padding:6px;border-bottom:1px solid #000">${
-        items[i].descripcion
+        items[i].det_descripcion
       }</td>
       <td style="padding:6px;border-bottom:1px solid #000">${
-        items[i].cantidad
+        items[i].det_cantidad
       }</td>
       <td style="padding:6px;border-bottom:1px solid #000">Q ${parseFloat(
-        items[i].precio
+        items[i].det_precio_unitario
       ).toFixed(2)}</td>
       <td style="padding:6px;border-bottom:1px solid #000">Q ${(
-        items[i].precio * items[i].cantidad
+        items[i].det_precio_unitario * items[i].det_cantidad
       ).toFixed(2)}</td>
     `;
 
@@ -66,8 +66,10 @@ const CotizacionPDFTemplate = React.forwardRef(
     const pages = dividirItemsPorAltura(items, ref);
 
     const getSubtotal = () =>
-      cotizacion?.items?.reduce((acc, i) => acc + i.precio * i.cantidad, 0) ||
-      0;
+      cotizacion?.items?.reduce(
+        (acc, i) => acc + i.det_precio_unitario * i.det_cantidad,
+        0
+      ) || 0;
 
     // const getIVA = () => getSubtotal() * 0.12;
     const getTotal = () => getSubtotal();
@@ -146,6 +148,18 @@ const CotizacionPDFTemplate = React.forwardRef(
                     {/* <p style={{ margin: 0 }}>Slogan o descripción aquí</p> */}
                   </div>
                 </div>
+                {cotizacion?.fecha_valida && (
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      textAlign: "right", // alineación a la derecha
+                      width: "100%", // ocupa todo el ancho disponible
+                      margin: 0,
+                    }}
+                  >
+                    <strong>Válida hasta:</strong> {cotizacion.fecha_valida}
+                  </p>
+                )}
 
                 {/* Info Cliente */}
                 <hr />
@@ -159,40 +173,35 @@ const CotizacionPDFTemplate = React.forwardRef(
                 >
                   <div style={{ width: "48%" }}>
                     {cotizacion?.empresa && (
-                      <p>
+                      <p style={{ fontSize: "12px" }}>
                         <strong>Empresa:</strong> {cotizacion.empresa}
                       </p>
                     )}
                     {cotizacion?.cliente && (
-                      <p>
+                      <p style={{ fontSize: "12px" }}>
                         <strong>Cliente:</strong> {cotizacion.cliente}
                       </p>
                     )}
                     {cotizacion?.direccion && (
-                      <p>
+                      <p style={{ fontSize: "12px" }}>
                         <strong>Dirección:</strong> {cotizacion.direccion}
-                      </p>
-                    )}
-                    {cotizacion?.nit && (
-                      <p>
-                        <strong>NIT:</strong> {cotizacion.nit}
                       </p>
                     )}
                   </div>
 
                   <div style={{ width: "48%" }}>
-                    {cotizacion?.fecha_valida && (
-                      <p>
-                        <strong>Válida hasta:</strong> {cotizacion.fecha_valida}
+                    {cotizacion?.nit && (
+                      <p style={{ fontSize: "12px" }}>
+                        <strong>NIT:</strong> {cotizacion.nit}
                       </p>
                     )}
                     {cotizacion?.tel && (
-                      <p>
+                      <p style={{ fontSize: "12px" }}>
                         <strong>Contacto:</strong> {cotizacion.tel}
                       </p>
                     )}
                     {cotizacion?.nog && (
-                      <p>
+                      <p style={{ fontSize: "12px" }}>
                         <strong>NOG:</strong> {cotizacion.nog}
                       </p>
                     )}
@@ -217,22 +226,33 @@ const CotizacionPDFTemplate = React.forwardRef(
                     color: "#fff",
                   }}
                 >
-                  <th style={cellStyle}>Descripción</th>
-                  <th style={cellStyle}>Cantidad</th>
-                  <th style={cellStyle}>Precio</th>
-                  <th style={cellStyle}>Total</th>
+                  <th style={headerStyle}>Descripción</th>
+                  <th style={headerStyle}>Cantidad</th>
+                  <th style={headerStyle}>Precio</th>
+                  <th style={headerStyle}>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {pageItems.map((item, idx) => (
                   <tr key={idx} style={{ pageBreakInside: "avoid" }}>
-                    <td style={cellStyle}>{item.descripcion}</td>
-                    <td style={cellStyle}>{item.cantidad}</td>
-                    <td style={cellStyle}>
-                      Q {parseFloat(item.precio).toFixed(2)}
+                    <td
+                      style={{
+                        borderBottom: "1px solid #000",
+                        padding: "3px",
+                        textAlign: "left",
+                      }}
+                    >
+                      {item.det_descripcion}
                     </td>
-                    <td style={cellStyle}>
-                      Q {(item.precio * item.cantidad).toFixed(2)}
+                    <td style={itemsStyle}>{item.det_cantidad}</td>
+                    <td style={itemsStyle}>
+                      Q {parseFloat(item.det_precio_unitario).toFixed(2)}
+                    </td>
+                    <td style={itemsStyle}>
+                      Q{" "}
+                      {(item.det_precio_unitario * item.det_cantidad).toFixed(
+                        2
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -287,10 +307,14 @@ const CotizacionPDFTemplate = React.forwardRef(
   }
 );
 
-const cellStyle = {
+const headerStyle = {
   borderBottom: "1px solid #000",
   padding: "6px",
   textAlign: "center",
 };
-
+const itemsStyle = {
+  borderBottom: "1px solid #000",
+  padding: "3px",
+  textAlign: "center",
+};
 export default CotizacionPDFTemplate;
