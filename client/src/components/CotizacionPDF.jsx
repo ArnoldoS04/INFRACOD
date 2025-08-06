@@ -27,19 +27,19 @@ const CotizacionPDFTemplate = React.forwardRef(
         const row = document.createElement("tr");
 
         row.innerHTML = `
-      <td style="padding:6px;border-bottom:1px solid #000">${
-        items[i].det_descripcion
-      }</td>
-      <td style="padding:6px;border-bottom:1px solid #000">${
-        items[i].det_cantidad
-      }</td>
-      <td style="padding:6px;border-bottom:1px solid #000">Q ${parseFloat(
-        items[i].det_precio_unitario
-      ).toFixed(2)}</td>
-      <td style="padding:6px;border-bottom:1px solid #000">Q ${(
-        items[i].det_precio_unitario * items[i].det_cantidad
-      ).toFixed(2)}</td>
-    `;
+  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+    ${items[i].det_descripcion}
+  </td>
+  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+    ${items[i].det_cantidad}
+  </td>
+  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+    Q ${parseFloat(items[i].det_precio_unitario).toFixed(2)}
+  </td>
+  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+    Q ${(items[i].det_precio_unitario * items[i].det_cantidad).toFixed(2)}
+  </td>
+`;
 
         fakeTable.appendChild(row);
         const height = row.getBoundingClientRect().height;
@@ -215,7 +215,7 @@ const CotizacionPDFTemplate = React.forwardRef(
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                fontSize: "14px",
+                fontSize: "12px",
               }}
             >
               <thead>
@@ -246,10 +246,10 @@ const CotizacionPDFTemplate = React.forwardRef(
                     </td>
                     <td style={itemsStyle}>{item.det_cantidad}</td>
                     <td style={itemsStyle}>
-                      Q {parseFloat(item.det_precio_unitario).toFixed(2)}
+                      Q{parseFloat(item.det_precio_unitario).toFixed(2)}
                     </td>
                     <td style={itemsStyle}>
-                      Q{" "}
+                      Q
                       {(item.det_precio_unitario * item.det_cantidad).toFixed(
                         2
                       )}
