@@ -1,5 +1,6 @@
 import React from "react";
 import * as NumeroALetras from "numero-a-letras";
+import { formatCurrency } from "./formatCurrency";
 
 const MAX_HEIGHT = 600;
 
@@ -27,16 +28,16 @@ const CotizacionPDFTemplate = React.forwardRef(
         const row = document.createElement("tr");
 
         row.innerHTML = `
-  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+  <td style="padding:6px; border-bottom:1px solid #000; ">
     ${items[i].det_descripcion}
   </td>
-  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+  <td style="padding:6px; border-bottom:1px solid #000; ">
     ${items[i].det_cantidad}
   </td>
-  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+  <td style="padding:6px; border-bottom:1px solid #000; ">
     Q ${parseFloat(items[i].det_precio_unitario).toFixed(2)}
   </td>
-  <td style="padding:6px; border-bottom:1px solid #000; font-size:8px;">
+  <td style="padding:6px; border-bottom:1px solid #000; ">
     Q ${(items[i].det_precio_unitario * items[i].det_cantidad).toFixed(2)}
   </td>
 `;
@@ -246,12 +247,11 @@ const CotizacionPDFTemplate = React.forwardRef(
                     </td>
                     <td style={itemsStyle}>{item.det_cantidad}</td>
                     <td style={itemsStyle}>
-                      Q{parseFloat(item.det_precio_unitario).toFixed(2)}
+                      {formatCurrency(item.det_precio_unitario)}
                     </td>
                     <td style={itemsStyle}>
-                      Q
-                      {(item.det_precio_unitario * item.det_cantidad).toFixed(
-                        2
+                      {formatCurrency(
+                        item.det_precio_unitario * item.det_cantidad
                       )}
                     </td>
                   </tr>
@@ -293,8 +293,8 @@ const CotizacionPDFTemplate = React.forwardRef(
                     <strong>IVA (12%):</strong> Q {getIVA().toFixed(2)}
                   </p> */}
                     <p style={{ color: "#003d7c" }}>
-                      <strong>Total con impuestos:</strong> Q{" "}
-                      {getTotal().toFixed(2)}
+                      <strong>Total con impuestos:</strong>
+                      {formatCurrency(getTotal().toFixed(2))}
                     </p>
                   </div>
                 </div>

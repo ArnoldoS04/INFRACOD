@@ -249,11 +249,8 @@ export const editCoti = async (req, res) => {
 export const cotiAll = async (req, res) => {
   try {
     const data = await prisma.cotizacion.findMany({
-      select: {
-        coti_correlativo: true,
-        coti_empresa: true,
-        coti_nombre: true,
-        coti_total: true,
+      include: {
+        detalle_cotizacion: true,
       },
     });
     res.json(data);

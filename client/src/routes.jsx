@@ -10,7 +10,10 @@ import EditCoti from "./views/pages/EditCotizacion";
 import CotiReport from "./views/pages/CotiReport";
 import Ingresos from "./views/pages/Ingresos";
 import Egreso from "./views/pages/Egreso";
-
+import RegistrarPago from "./views/pages/RegistrarPago";
+import NewProject from "./views/pages/NewProject";
+import EditProject from "./views/pages/EditProject";
+import ProjectReport from "./views/pages/ProjectReport";
 const routes = [
   {
     path: "/login",
@@ -53,6 +56,7 @@ const routes = [
       </PrivateRoute>
     ),
   },
+
   {
     path: "/income",
     name: "Registrar Ingreso",
@@ -68,6 +72,42 @@ const routes = [
     element: (
       <PrivateRoute>
         <Egreso />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/newproject",
+    name: "Nuevo Proyecto",
+    element: (
+      <PrivateRoute>
+        <NewProject />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/editproject",
+    name: "Editar Proyecto",
+    element: (
+      <PrivateRoute>
+        <EditProject />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/projectreport",
+    name: "Reporte Proyecto",
+    element: (
+      <PrivateRoute>
+        <ProjectReport />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/registerpayment",
+    name: "Registrar Pago",
+    element: (
+      <PrivateRoute>
+        <RegistrarPago />
       </PrivateRoute>
     ),
   },

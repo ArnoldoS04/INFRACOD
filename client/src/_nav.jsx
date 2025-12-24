@@ -52,6 +52,29 @@ const _nav = [
   },
   {
     component: CNavTitle,
+    name: "Proyectos",
+  },
+  {
+    component: CNavItem,
+    name: "Nuevo Proyecto",
+    to: "/newproject",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Reporte proyectos",
+    to: "/projectreport",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Editar proyecto",
+    to: "/editproject",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+
+  {
+    component: CNavTitle,
     name: "Finanzas",
   },
   {
@@ -64,6 +87,16 @@ const _nav = [
     component: CNavItem,
     name: "Registrar Egreso",
     to: "/expenses",
+    icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: "WISP",
+  },
+  {
+    component: CNavItem,
+    name: "Registrar Pago",
+    to: "/registerpayment",
     icon: <FontAwesomeIcon icon={faFileLines} className="nav-icon" />,
   },
   //   {

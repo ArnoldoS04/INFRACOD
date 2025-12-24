@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   CCol,
   CButton,
@@ -20,15 +20,14 @@ import { CustomSelect } from "../../components/CustomSelect";
 import authFetch from "../../components/AuthFecth";
 import ToastContainer from "../../components/ToastConainer";
 
-const Ingresos = () => {
+const NewProject = () => {
   // Inputs
   const [correlativo, setCorrelativo] = useState("");
   const [comentarios, setComentarios] = useState("");
   const [monto, setMonto] = useState("");
   const [referencia, setReferencia] = useState("");
-  const [fechaPago, setFechaPago] = useState("");
-  const [metodoPagoOptions, setMetodoPagoOptions] = useState([]);
-  const [categoriaOptions, setCategoriaOptions] = useState([]);
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
 
   const [metodoPagoSeleccionado, setMetodoPagoSeleccionado] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
@@ -39,33 +38,6 @@ const Ingresos = () => {
   const showToast = (message, color = "danger") => {
     const id = Date.now(); // ID único
     setToasts((prev) => [...prev, { id, message, color }]);
-  };
-
-  // Obtiene y llena select's
-  const dataSelect = async () => {
-    try {
-      const metodoCat = 2;
-      const catCat = 3;
-
-      const resMetodoPago = await authFetch(`/fin/categorias/${metodoCat}`);
-      const resCategoria = await authFetch(`/fin/categorias/${catCat}`);
-
-      // Adaptamos el formato para el CustomSelect (label y value)
-      const metodoPagoAdaptado = resMetodoPago.data.map((item) => ({
-        label: item.cat_nombre,
-        value: item.idcatalogo,
-      }));
-
-      const categoriaAdaptada = resCategoria.data.map((item) => ({
-        label: item.cat_nombre,
-        value: item.idcatalogo,
-      }));
-
-      setMetodoPagoOptions(metodoPagoAdaptado);
-      setCategoriaOptions(categoriaAdaptada);
-    } catch (error) {
-      console.error("Error al llenar selects", error);
-    }
   };
 
   // Validacion de formulario
@@ -116,15 +88,11 @@ const Ingresos = () => {
     }
   };
 
-  useEffect(() => {
-    dataSelect();
-  }, []);
-
   return (
     <>
       <CCard className="mb-4">
         <CCardHeader>
-          <strong>Nuevo Ingreso</strong>
+          <strong>Nuevo Proyecto</strong>
         </CCardHeader>
         <CCardBody>
           <CForm
@@ -133,15 +101,6 @@ const Ingresos = () => {
             validated={validated}
             onSubmit={handleSubmit}
           >
-            <CCol md={3}>
-              <CustomSelect
-                name="categoria"
-                value={categoriaSeleccionada}
-                onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-                options={categoriaOptions}
-                required
-              />
-            </CCol>
             <CCol md={3}>
               <CInputGroup>
                 <CFormInput
@@ -164,7 +123,7 @@ const Ingresos = () => {
             <CCol md={6}>
               <CFormInput hidden />
             </CCol>
-            <CCol md={4}>
+            <CCol md={5}>
               <CFormInput
                 type="text"
                 feedbackValid="Looks good!"
@@ -173,12 +132,12 @@ const Ingresos = () => {
                 readOnly
               />
             </CCol>
-            <CCol md={4}>
+            <CCol md={5}>
               <CFormInput
                 type="text"
                 feedbackValid="Looks good!"
-                id="proyecto"
-                label="Proyecto"
+                id="empresa"
+                label="Empresa"
                 readOnly
               />
             </CCol>
@@ -189,16 +148,6 @@ const Ingresos = () => {
                 aria-describedby="inputGroupPrependFeedback"
                 feedbackValid="Please choose a username."
                 id="totalVenta"
-                readOnly
-              />
-            </CCol>
-            <CCol md={2}>
-              <CFormInput
-                label="Total restante"
-                type="text"
-                aria-describedby="inputGroupPrependFeedback"
-                feedbackValid="Please choose a username."
-                id="totalRestante"
                 readOnly
               />
             </CCol>
@@ -219,18 +168,6 @@ const Ingresos = () => {
               <CCol md={6}>
                 <CRow>
                   <CCol md={6}>
-                    <CustomSelect
-                      name="metodoPago"
-                      placeholder={"Seleccione Método de Pago"}
-                      value={metodoPagoSeleccionado}
-                      onChange={(e) =>
-                        setMetodoPagoSeleccionado(e.target.value)
-                      }
-                      options={metodoPagoOptions}
-                      required
-                    />
-                  </CCol>
-                  <CCol md={6}>
                     <CFormInput
                       type="text"
                       aria-describedby="validationCustom05Feedback"
@@ -242,19 +179,20 @@ const Ingresos = () => {
                     />
                   </CCol>
                   <CCol md={3}>
-                    <CFormLabel>Fecha de pago:</CFormLabel>
+                    <CFormLabel>Fecha inicio:</CFormLabel>
                   </CCol>
                   <CCol md={3}>
                     <CFormInput
                       type="date"
-                      id="fechaPago"
-                      name="fechaPago"
+                      id="fechaInicio"
+                      name="fechaInicio"
                       required
                       onKeyDown={(e) => e.preventDefault()}
-                      value={fechaPago}
-                      onChange={(e) => setFechaPago(e.target.value)}
+                      value={fechaInicio}
+                      onChange={(e) => setFechaInicio(e.target.value)}
                     />
                   </CCol>
+
                   <CCol md={6}>
                     <CFormInput
                       type="number"
@@ -266,6 +204,20 @@ const Ingresos = () => {
                       value={monto}
                       onChange={(e) => setMonto(e.target.value)}
                       required
+                    />
+                  </CCol>
+                  <CCol md={3}>
+                    <CFormLabel>Fecha fin:</CFormLabel>
+                  </CCol>
+                  <CCol md={3}>
+                    <CFormInput
+                      type="date"
+                      id="fechaFin"
+                      name="fechaFin"
+                      required
+                      onKeyDown={(e) => e.preventDefault()}
+                      value={fechaFin}
+                      onChange={(e) => setFechaFin(e.target.value)}
                     />
                   </CCol>
                 </CRow>
@@ -284,4 +236,5 @@ const Ingresos = () => {
     </>
   );
 };
-export default Ingresos;
+
+export default NewProject;
