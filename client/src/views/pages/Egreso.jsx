@@ -131,16 +131,15 @@ const Egreso = () => {
                   placeholder="Ingrese No. de cotización"
                   type="text"
                   id="correlativo"
-                  hidden
                   disabled
                 />
-                <CButton type="button" color="primary" disabled hidden>
+                <CButton type="button" color="primary" disabled>
                   Buscar
                 </CButton>
               </CInputGroup>
             </CCol>
 
-            {/* <CCol md={6}>
+            <CCol md={6}>
               <CFormInput hidden />
             </CCol>
             <CCol md={4}>
@@ -180,7 +179,7 @@ const Egreso = () => {
                 id="validationCustomUsername"
                 readOnly
               />
-            </CCol> */}
+            </CCol>
             <hr />
             <CCol md={6}>
               <CFormTextarea

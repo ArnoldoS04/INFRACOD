@@ -40,7 +40,7 @@ const Login = () => {
 
       localStorage.setItem("token", res.data.accessToken);
 
-      navigate("/dashboard"); // Redirige a una página después del login
+      navigate("/dashboard", { replace: true }); // Redirige a una página después del login
     } catch (err) {
       console.error("Error en login", err);
       const mensajeError =

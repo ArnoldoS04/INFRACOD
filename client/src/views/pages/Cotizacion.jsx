@@ -130,6 +130,7 @@ const ValidationExample = () => {
   };
 
   const generatePDF = async () => {
+    console.log(pdfRef);
     try {
       const res = await authFetch.post("/sales/cotinsert", {
         coti_nombre: nombreCliente,
