@@ -1,7 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import fs from 'fs';
+import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
+export default defineConfig(({ mode }) => {
+  const isDev = mode === 'development';
+
+  return {
+    server: isDev
+      ? {
+          https: {
+            key: fs.readFileSync('./certs/infracod.local-key.pem'),
+            cert: fs.readFileSync('./certs/infracod.local.pem'),
+          }
+        }
+      : {},
+  };
+});

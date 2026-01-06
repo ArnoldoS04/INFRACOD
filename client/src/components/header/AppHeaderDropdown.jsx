@@ -32,7 +32,7 @@ const AppHeaderDropdown = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        "https://infracod.local:3000/api/auth/logout",
         {},
         { withCredentials: true }
       );
