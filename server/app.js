@@ -25,5 +25,5 @@ app.use("/api", routes);
 
 // Crear servidor HTTPS
 https.createServer({ key, cert }, app).listen(process.env.PORT, () => {
-  console.log(`Server corriendo en https://panel.infracod.com:${process.env.PORT}`);
+  console.log(`Server corriendo en https://api.infracod.com:${process.env.PORT}`);
 });
