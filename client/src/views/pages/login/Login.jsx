@@ -28,7 +28,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://infracod.local:3000/api/auth/login",
+        "https://api.infracod.com:3000/api/auth/login",
         {
           username,
           password,
