@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Crea una instancia de Axios
 const authFetch = axios.create({
-  baseURL: "https://api.infracod.com:3000/api",
+  baseURL: "https://api.infracod.com/api",
   withCredentials: true, // importante para enviar la cookie del refreshToken
 });
 
@@ -32,7 +32,7 @@ authFetch.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          "https://api.infracod.com:3000/api/auth/refresh",
+          "https://api.infracod.com/api/auth/refresh",
           null,
           {
             withCredentials: true,
