@@ -4,7 +4,6 @@ import morgan from "morgan";
 import routes from "./routes/index.routes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import https from "https";
 
 dotenv.config();
 
@@ -23,7 +22,7 @@ app.use(
 
 app.use("/api", routes);
 
-// Crear servidor HTTPS
-https.createServer({ key, cert }, app).listen(process.env.PORT, () => {
+// Crear servidor
+app.listen(process.env.PORT, () => {
   console.log(`Server corriendo en https://api.infracod.com:${process.env.PORT}`);
 });
